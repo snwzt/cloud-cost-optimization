@@ -1,6 +1,16 @@
-# AWS Management Scripts
+# Cloud Cost Optimization by Identifying Stale Resources
 
-AWS management scripts using Serverless:
+## Identifying Stale EBS Snapshots:
+In this Lambda function, stale EBS snapshots that are not associated with a volume or the assciated volumes are not associated with active ec2 instance are identified and deleted to reduce cloud costs. 
 
-1. EC2 instance isolation
-2. Cloud cost optimization
+## Flowchart:
+```mermaid
+flowchart LR
+    A(Cloudwatch) --> |cron <br> trigger| B(Lambda function)
+    B --> C{attached to <br> a volume}
+    C -->|yes| E{attached to <br> a running instance}
+    C -->|no| H[delete snapshot]
+    C -->|volume <br> not found| D[delete snapshot]
+    E -->|yes| F[keep snapshot]
+    E -->|no| G[delete snapshot]
+```
